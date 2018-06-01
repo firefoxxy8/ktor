@@ -43,6 +43,7 @@ include ':ktor-utils'
 include ':ktor-utils:ktor-utils-jvm'
 include ':ktor-network'
 include ':ktor-network:ktor-network-tls'
+include ':ktor-utils:ktor-utils-jvm'
 
 project(':ktor-server').projectDir = "$rootDir/ktor-server" as File
 project(':ktor-server:ktor-server-core').projectDir = "$rootDir/ktor-server/ktor-server-core" as File
