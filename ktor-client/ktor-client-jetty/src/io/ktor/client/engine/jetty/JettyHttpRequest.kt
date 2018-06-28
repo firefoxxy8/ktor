@@ -47,9 +47,9 @@ internal class JettyHttpRequest(
         val responseContext = CompletableDeferred<Unit>()
         val responseListener = JettyResponseListener(bodyChannel, dispatcher, responseContext)
 
-        val jettyRequest = withPromise<Stream> { promise ->
+        val jettyRequest = JettyHttp2Request(withPromise<Stream> { promise ->
             session.newStream(headersFrame, promise, responseListener)
-        }.let { JettyHttp2Request(it) }
+        })
 
         sendRequestBody(jettyRequest, content)
 
@@ -101,6 +101,7 @@ internal class JettyHttpRequest(
 
     private fun ByteReadChannel.writeResponse(request: JettyHttp2Request) = launch(dispatcher + executionContext) {
         val buffer = HttpClientDefaultPool.borrow()
+        request.write(buffer)
         pass(buffer) { request.write(it) }
         HttpClientDefaultPool.recycle(buffer)
         request.endBody()

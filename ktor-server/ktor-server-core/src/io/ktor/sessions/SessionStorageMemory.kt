@@ -3,6 +3,7 @@ package io.ktor.sessions
 import io.ktor.cio.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.io.*
+import kotlinx.io.core.*
 import java.util.concurrent.*
 
 /**
@@ -19,7 +20,7 @@ class SessionStorageMemory : SessionStorage {
     override suspend fun write(id: String, provider: suspend (ByteWriteChannel) -> Unit) {
         sessions[id] = writer(Unconfined, autoFlush = true) {
             provider(channel)
-        }.channel.toByteArray()
+        }.channel.readRemaining().readBytes()
     }
 
     override suspend fun <R> read(id: String, consumer: suspend (ByteReadChannel) -> R): R =
