@@ -4,6 +4,8 @@ konanArtifacts {
     library('ktor_client_ios') {
         enableMultiplatform true
 
+        srcDir 'src'
+
         libraries {
             artifact project(':ktor-http:ktor-http-ios'), 'ktor_http_ios'
             artifact project(':ktor-utils:ktor-utils-ios'), 'ktor_utils_ios'
